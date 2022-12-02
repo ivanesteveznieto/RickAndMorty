@@ -8,7 +8,7 @@
 import Foundation
 
 protocol CharactersUseCaseProtocol {
-    
+    func getCharacters() async -> Result<CharactersResultRepresentable, NetworkError>
 }
 
 struct CharactersUseCase: CharactersUseCaseProtocol {
@@ -16,5 +16,9 @@ struct CharactersUseCase: CharactersUseCaseProtocol {
     
     init(repository: CharactersRepositoryProtocol) {
         self.repository = repository
+    }
+    
+    func getCharacters() async -> Result<CharactersResultRepresentable, NetworkError> {
+        await repository.getCharacters()
     }
 }

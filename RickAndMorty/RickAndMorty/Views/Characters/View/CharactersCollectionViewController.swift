@@ -21,6 +21,7 @@ final class CharactersCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.getCharacters()
     }
 
     /*

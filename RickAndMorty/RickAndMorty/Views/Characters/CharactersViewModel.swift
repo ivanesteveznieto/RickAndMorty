@@ -15,4 +15,20 @@ final class CharactersViewModel {
         useCase = dependencies.resolve()
         coordinator = dependencies.resolve()
     }
+    
+    func getCharacters() {
+        Task {
+            let result = await useCase.getCharacters()
+            // TODO
+            switch result {
+            case .success(let result): break
+            case .failure(let error):
+                switch error {
+                case .badUrl: break
+                case .noData: break
+                case .decoding: break
+                }
+            }
+        }
+    }
 }
