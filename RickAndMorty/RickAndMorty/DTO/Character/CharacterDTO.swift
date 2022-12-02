@@ -23,5 +23,5 @@ extension CharacterDTO: CharacterRepresentable {
 enum CharacterStatus: String, Decodable {
     case alive = "Alive"
     case dead = "Dead"
-    case unknown = "Unknown"
+    case unknown = "unknown"
 }
