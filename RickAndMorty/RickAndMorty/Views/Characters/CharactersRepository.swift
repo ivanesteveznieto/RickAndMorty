@@ -8,7 +8,7 @@
 import Foundation
 
 protocol CharactersRepositoryProtocol {
-    func getCharacters() async -> Result<CharactersResultRepresentable, NetworkError>
+    func getCharacters(status: CharacterStatus?) async -> Result<CharactersResultRepresentable, NetworkError>
     func getCharactersFromUrl(_ url: String) async -> Result<CharactersResultRepresentable, NetworkError>
 }
 
@@ -19,9 +19,9 @@ struct CharactersRepository: CharactersRepositoryProtocol {
         self.networkManager = networkManager
     }
     
-    func getCharacters() async -> Result<CharactersResultRepresentable, NetworkError> {
+    func getCharacters(status: CharacterStatus?) async -> Result<CharactersResultRepresentable, NetworkError> {
         do {
-            let data = try await networkManager.get(path: "character").get()
+            let data = try await networkManager.get(path: buildPath(status)).get()
             return decodeResult(data)
         } catch let error as NSError {
             return .failure(.error(error))
@@ -47,5 +47,13 @@ private extension CharactersRepository {
         } catch {
             return .failure(.decoding)
         }
+    }
+    
+    func buildPath(_ status: CharacterStatus?) -> String {
+        var path = "character"
+        if let status {
+            return path + "/?status=" + status.rawValue.lowercased()
+        }
+        return path
     }
 }
