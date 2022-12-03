@@ -8,6 +8,7 @@
 import UIKit
 
 final class CharactersCollectionViewController: UICollectionViewController {
+    private let activityIndicatorView = UIActivityIndicatorView(style: .large)
     private let numberOfItemsPerRow = 4
     private let viewModel: CharactersViewModel
     
@@ -23,6 +24,7 @@ final class CharactersCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        showLoading()
         // TODO: viewModel.getCharacters()
     }
 
@@ -42,7 +44,14 @@ final class CharactersCollectionViewController: UICollectionViewController {
 // MARK: Private methods
 private extension CharactersCollectionViewController {
     func setupView() {
+        activityIndicatorView.hidesWhenStopped = true
         collectionView.register(UINib(nibName: "\(CharacterCollectionViewCell.self)", bundle: nil), forCellWithReuseIdentifier: "\(CharacterCollectionViewCell.self)")
+    }
+    
+    func showLoading() {
+        view.addSubview(activityIndicatorView)
+        activityIndicatorView.startAnimating()
+        activityIndicatorView.center = view.center
     }
 }
 
