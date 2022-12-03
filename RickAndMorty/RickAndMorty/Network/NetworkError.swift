@@ -10,5 +10,5 @@ import Foundation
 enum NetworkError: Error {
     case badUrl
     case decoding
-    case noData
+    case error(NSError)
 }

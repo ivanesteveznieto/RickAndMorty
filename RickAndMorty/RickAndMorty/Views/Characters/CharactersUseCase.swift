@@ -9,6 +9,7 @@ import Foundation
 
 protocol CharactersUseCaseProtocol {
     func getCharacters() async -> Result<CharactersResultRepresentable, NetworkError>
+    func getCharactersFromUrl(_ url: String) async -> Result<CharactersResultRepresentable, NetworkError>
 }
 
 struct CharactersUseCase: CharactersUseCaseProtocol {
@@ -20,5 +21,9 @@ struct CharactersUseCase: CharactersUseCaseProtocol {
     
     func getCharacters() async -> Result<CharactersResultRepresentable, NetworkError> {
         await repository.getCharacters()
+    }
+    
+    func getCharactersFromUrl(_ url: String) async -> Result<CharactersResultRepresentable, NetworkError> {
+        await repository.getCharactersFromUrl(url)
     }
 }

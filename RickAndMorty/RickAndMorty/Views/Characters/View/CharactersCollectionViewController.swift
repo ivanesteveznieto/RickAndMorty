@@ -6,15 +6,18 @@
 //
 
 import UIKit
+import Combine
 
 final class CharactersCollectionViewController: UICollectionViewController {
     private let activityIndicatorView = UIActivityIndicatorView(style: .large)
     private let numberOfItemsPerRow = 4
     private let viewModel: CharactersViewModel
+    private var subscriptions = Set<AnyCancellable>()
     
     init(viewModel: CharactersViewModel) {
         self.viewModel = viewModel
         super.init(nibName: "CharactersCollectionViewController", bundle: .main)
+        bind()
     }
     
     required init?(coder: NSCoder) {
@@ -25,7 +28,7 @@ final class CharactersCollectionViewController: UICollectionViewController {
         super.viewDidLoad()
         setupView()
         showLoading()
-        // TODO: viewModel.getCharacters()
+        viewModel.getCharacters()
     }
 
     // MARK: UICollectionViewDataSource
@@ -43,6 +46,12 @@ final class CharactersCollectionViewController: UICollectionViewController {
 
 // MARK: Private methods
 private extension CharactersCollectionViewController {
+    func bind() {
+        viewModel.charactersFailurePublisher.sink { _ in
+            // TODO: Show error
+        }.store(in: &subscriptions)
+    }
+    
     func setupView() {
         activityIndicatorView.hidesWhenStopped = true
         collectionView.register(UINib(nibName: "\(CharacterCollectionViewCell.self)", bundle: nil), forCellWithReuseIdentifier: "\(CharacterCollectionViewCell.self)")
