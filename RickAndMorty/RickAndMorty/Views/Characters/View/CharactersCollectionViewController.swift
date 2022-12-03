@@ -8,6 +8,7 @@
 import UIKit
 
 final class CharactersCollectionViewController: UICollectionViewController {
+    private let numberOfItemsPerRow = 4
     private let viewModel: CharactersViewModel
     
     init(viewModel: CharactersViewModel) {
@@ -21,33 +22,33 @@ final class CharactersCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.getCharacters()
+        setupView()
+        // TODO: viewModel.getCharacters()
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
 
     // MARK: UICollectionViewDataSource
-
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
-
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 0
-    }
-
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { 7 } // TODO
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        UICollectionViewCell()
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "\(CharacterCollectionViewCell.self)", for: indexPath) as? CharacterCollectionViewCell else { return UICollectionViewCell() }
+        cell.bind(CharacterCollectionViewCell.Binder(imageUrl: "",
+                                                     name: "",
+                                                     planet: "",
+                                                     status: ""))
+        return cell
+    }
+}
+
+// MARK: Private methods
+private extension CharactersCollectionViewController {
+    func setupView() {
+        collectionView.register(UINib(nibName: "\(CharacterCollectionViewCell.self)", bundle: nil), forCellWithReuseIdentifier: "\(CharacterCollectionViewCell.self)")
+    }
+}
+
+extension CharactersCollectionViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let size = Int(collectionView.bounds.width / CGFloat(numberOfItemsPerRow))
+        return CGSize(width: size, height: size * 2)
     }
 }
