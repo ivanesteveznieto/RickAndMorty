@@ -52,7 +52,7 @@ private extension CharactersRepository {
     func buildPath(_ status: CharacterStatus?) -> String {
         var path = "character"
         if let status {
-            return path + "/?status=" + status.rawValue.lowercased()
+            path += "/?status=" + status.rawValue.lowercased()
         }
         return path
     }

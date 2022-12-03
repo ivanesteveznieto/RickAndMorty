@@ -13,6 +13,7 @@ final class CharactersCollectionViewController: UICollectionViewController {
     private let numberOfItemsPerRow = 4
     private let viewModel: CharactersViewModel
     private var subscriptions = Set<AnyCancellable>()
+    private var characters = [Character]()
     
     init(viewModel: CharactersViewModel) {
         self.viewModel = viewModel
@@ -32,14 +33,15 @@ final class CharactersCollectionViewController: UICollectionViewController {
     }
 
     // MARK: UICollectionViewDataSource
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { 7 } // TODO
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { characters.count }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "\(CharacterCollectionViewCell.self)", for: indexPath) as? CharacterCollectionViewCell else { return UICollectionViewCell() }
-        cell.bind(CharacterCollectionViewCell.Binder(imageUrl: "",
-                                                     name: "",
-                                                     planet: "",
-                                                     status: ""))
+        let character = characters[indexPath.row]
+        cell.bind(CharacterCollectionViewCell.Binder(imageUrl: character.imageUrl,
+                                                     name: character.name,
+                                                     planet: character.planet,
+                                                     status: character.status))
         return cell
     }
 }
@@ -47,12 +49,25 @@ final class CharactersCollectionViewController: UICollectionViewController {
 // MARK: Private methods
 private extension CharactersCollectionViewController {
     func bind() {
+        viewModel.charactersLoadedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] characters in
+            activityIndicatorView.stopAnimating()
+            self.characters += characters
+            collectionView.reloadData()
+        }.store(in: &subscriptions)
+        
         viewModel.charactersFailurePublisher.sink { _ in
             // TODO: Show error
+        }.store(in: &subscriptions)
+        
+        viewModel.noMoreCharactersPublisher.sink { [unowned activityIndicatorView] _ in
+            activityIndicatorView.stopAnimating()
         }.store(in: &subscriptions)
     }
     
     func setupView() {
+        title = "Characters"
         activityIndicatorView.hidesWhenStopped = true
         collectionView.register(UINib(nibName: "\(CharacterCollectionViewCell.self)", bundle: nil), forCellWithReuseIdentifier: "\(CharacterCollectionViewCell.self)")
     }

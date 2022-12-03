@@ -12,10 +12,10 @@ final class CharactersViewModel {
     private let useCase: CharactersUseCaseProtocol
     private let coordinator: CharactersCoordinatorProtocol
     private var nextUrl: String?
-    private let charactersLoadedSubject = PassthroughSubject<CharactersResultRepresentable, Never>()
+    private let charactersLoadedSubject = PassthroughSubject<[Character], Never>()
     private let charactersFailureSubject = PassthroughSubject<String?, Never>()
     private let noMoreCharactersSubject = PassthroughSubject<Void, Never>()
-    var charactersLoadedPublisher: AnyPublisher<CharactersResultRepresentable, Never> {
+    var charactersLoadedPublisher: AnyPublisher<[Character], Never> {
         charactersLoadedSubject.eraseToAnyPublisher()
     }
     var charactersFailurePublisher: AnyPublisher<String?, Never> {
@@ -56,7 +56,8 @@ private extension CharactersViewModel {
         switch result {
         case .success(let result):
             nextUrl = result.nextCharactersUrl
-            
+            let characters = result.characters.map({ Character($0) })
+            charactersLoadedSubject.send(characters)
         case .failure(let error):
             guard !paging else { return }
             
