@@ -14,6 +14,9 @@ final class CharactersCollectionViewController: UICollectionViewController {
     private let viewModel: CharactersViewModel
     private var subscriptions = Set<AnyCancellable>()
     private var characters = [Character]()
+    private var isLoadingCharacters: Bool {
+        activityIndicatorView.isAnimating
+    }
     private lazy var filterMenuItems: [UIAction] = {
         return [
             UIAction(title: "Alive", handler: { [unowned viewModel] _ in
@@ -81,13 +84,13 @@ private extension CharactersCollectionViewController {
         viewModel.charactersLoadedPublisher
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] characters in
-                activityIndicatorView.stopAnimating()
                 self.characters = characters
                 collectionView.reloadData()
+                activityIndicatorView.stopAnimating()
             }.store(in: &subscriptions)
         
-        viewModel.charactersFailurePublisher.sink { _ in
-            // TODO: Show error
+        viewModel.charactersFailurePublisher.sink { [unowned self] _ in
+            showErrorAlert()
         }.store(in: &subscriptions)
         
         viewModel.noMoreCharactersPublisher.sink { [unowned activityIndicatorView] _ in
@@ -97,16 +100,32 @@ private extension CharactersCollectionViewController {
     
     func setupView() {
         title = "Characters"
+        
+        view.addSubview(activityIndicatorView)
         activityIndicatorView.hidesWhenStopped = true
         activityIndicatorView.color = .systemBlue
+        
         collectionView.register(UINib(nibName: "\(CharacterCollectionViewCell.self)", bundle: nil), forCellWithReuseIdentifier: "\(CharacterCollectionViewCell.self)")
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Filter", menu: filterMenu)
     }
     
     func showLoading() {
-        view.addSubview(activityIndicatorView)
         activityIndicatorView.startAnimating()
         activityIndicatorView.center = view.center
+    }
+    
+    func showErrorAlert() {
+        let alertController = UIAlertController(title: "Error",
+                                                message: "Error while getting characters. You can try to get all characters again",
+                                                preferredStyle: .alert)
+        let retryAction = UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
+            self?.viewModel.getCharacters()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        alertController.addAction(cancelAction)
+        alertController.addAction(retryAction)
+        present(alertController, animated: true)
     }
 }
 
