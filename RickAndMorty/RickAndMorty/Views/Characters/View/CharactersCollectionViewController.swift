@@ -89,8 +89,8 @@ private extension CharactersCollectionViewController {
                 activityIndicatorView.stopAnimating()
             }.store(in: &subscriptions)
         
-        viewModel.charactersFailurePublisher.sink { [unowned self] _ in
-            showErrorAlert()
+        viewModel.charactersFailurePublisher.sink { [unowned self] errorDescription in
+            showErrorAlert(errorDescription)
         }.store(in: &subscriptions)
         
         viewModel.noMoreCharactersPublisher.sink { [unowned activityIndicatorView] _ in
@@ -115,9 +115,9 @@ private extension CharactersCollectionViewController {
         activityIndicatorView.center = view.center
     }
     
-    func showErrorAlert() {
+    func showErrorAlert(_ errorDescription: String) {
         let alertController = UIAlertController(title: "Error",
-                                                message: "Error while getting characters. You can try to get all characters again",
+                                                message: errorDescription,
                                                 preferredStyle: .alert)
         let retryAction = UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
             self?.viewModel.getCharacters()
