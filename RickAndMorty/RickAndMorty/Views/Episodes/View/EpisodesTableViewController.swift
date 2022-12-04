@@ -6,13 +6,16 @@
 //
 
 import UIKit
+import Combine
 
 final class EpisodesTableViewController: UITableViewController {
     private let viewModel: EpisodesViewModel
+    private var subscriptions = Set<AnyCancellable>()
     
     init(viewModel: EpisodesViewModel) {
         self.viewModel = viewModel
         super.init(nibName: "EpisodesTableViewController", bundle: .main)
+        bind()
     }
     
     required init?(coder: NSCoder) {
@@ -21,6 +24,7 @@ final class EpisodesTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.viewDidLoad()
     }
 
     // MARK: - Table view data source
@@ -44,4 +48,12 @@ final class EpisodesTableViewController: UITableViewController {
         return cell
     }
     */
+}
+
+private extension EpisodesTableViewController {
+    func bind() {
+        viewModel.titlePublisher.sink { [unowned self] screenTitle in
+            title = screenTitle
+        }.store(in: &subscriptions)
+    }
 }

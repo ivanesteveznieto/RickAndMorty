@@ -14,7 +14,7 @@ final class CharactersViewModel {
     private var nextUrl: String?
     private let loadingSubject = PassthroughSubject<Void, Never>()
     private let charactersLoadedSubject = PassthroughSubject<[Character], Never>()
-    private let charactersFailureSubject = PassthroughSubject<String?, Never>()
+    private let charactersFailureSubject = PassthroughSubject<String, Never>()
     private let noMoreCharactersSubject = PassthroughSubject<Void, Never>()
     private var characters = [CharacterRepresentable]()
     var loadingPublisher: AnyPublisher<Void, Never> {
@@ -23,7 +23,7 @@ final class CharactersViewModel {
     var charactersLoadedPublisher: AnyPublisher<[Character], Never> {
         charactersLoadedSubject.eraseToAnyPublisher()
     }
-    var charactersFailurePublisher: AnyPublisher<String?, Never> {
+    var charactersFailurePublisher: AnyPublisher<String, Never> {
         charactersFailureSubject.eraseToAnyPublisher()
     }
     var noMoreCharactersPublisher: AnyPublisher<Void, Never> {
@@ -56,6 +56,10 @@ final class CharactersViewModel {
             let result = await useCase.getCharactersFromUrl(nextUrl)
             handleCharactersResponse(result, paging: true)
         }
+    }
+    
+    func characterSelected(_ index: Int) {
+        coordinator.goToEpisodesScreen(character: characters[index])
     }
 }
 

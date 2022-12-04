@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 protocol CharactersCoordinatorProtocol: AnyObject {
-    
+    func goToEpisodesScreen(character: CharacterRepresentable)
 }
 
 final class CharactersCoordinator {
@@ -28,7 +28,12 @@ final class CharactersCoordinator {
 }
 
 extension CharactersCoordinator: CharactersCoordinatorProtocol {
-    // TODO
+    func goToEpisodesScreen(character: CharacterRepresentable) {
+        let coordinator = EpisodesCoordinator(navigationController: navigationController)
+        coordinator
+            .set(character)
+            .start()
+    }
 }
 
 private extension CharactersCoordinator {

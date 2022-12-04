@@ -9,26 +9,28 @@ import Foundation
 import UIKit
 
 protocol EpisodesCoordinatorProtocol: AnyObject {
-    
+    var character: CharacterRepresentable? { get }
 }
 
-final class EpisodesCoordinator {
+final class EpisodesCoordinator: EpisodesCoordinatorProtocol {
     private weak var navigationController: UINavigationController?
     private lazy var dependency: EpisodesDependenciesResolver = {
         Dependencies(coordinator: self)
     }()
+    var character: CharacterRepresentable?
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController?) {
         self.navigationController = navigationController
     }
     
     func start() {
         navigationController?.pushViewController(dependency.resolve(), animated: true)
     }
-}
-
-extension EpisodesCoordinator: EpisodesCoordinatorProtocol {
     
+    func set(_ character: CharacterRepresentable) -> Self {
+        self.character = character
+        return self
+    }
 }
 
 private extension EpisodesCoordinator {
@@ -43,7 +45,7 @@ private extension EpisodesCoordinator {
         func resolve() -> EpisodesCoordinatorProtocol { coordinator }
         func resolve() -> EpisodesRepositoryProtocol { EpisodesRepository(networkManager: resolve()) }
         func resolve() -> EpisodesUseCaseProtocol { EpisodesUseCase(repository: resolve()) }
-        func resolve() -> EpisodesViewModel { EpisodesViewModel(dependencies: self) }
+        func resolve() -> EpisodesViewModel { EpisodesViewModel(dependencies: self, character: coordinator.character!) }
         func resolve() -> UIViewController { EpisodesTableViewController(viewModel: resolve()) }
     }
 }

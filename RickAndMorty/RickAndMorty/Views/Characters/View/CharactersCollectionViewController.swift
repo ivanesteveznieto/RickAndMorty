@@ -72,6 +72,12 @@ final class CharactersCollectionViewController: UICollectionViewController {
             viewModel.getMoreCharacters()
         }
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if !isLoadingCharacters {
+            viewModel.characterSelected(indexPath.row)
+        }
+    }
 }
 
 // MARK: Private methods
