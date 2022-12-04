@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class CharacterCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var imageView: UIImageView!
@@ -14,7 +15,7 @@ final class CharacterCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var statusLabel: UILabel!
     
     struct Binder {
-        let imageUrl: String
+        let imageUrl: URL?
         let name: String
         let planet: String
         let status: String
@@ -26,7 +27,7 @@ final class CharacterCollectionViewCell: UICollectionViewCell {
     }
     
     func bind(_ binder: Binder) {
-        imageView.loadFrom(url: binder.imageUrl, placeholder: UIImage(systemName: "photo"))
+        imageView.kf.setImage(with: binder.imageUrl, placeholder: UIImage(systemName: "photo"))
         nameLabel.text = binder.name
         planetLabel.text = binder.planet
         statusLabel.text = binder.status

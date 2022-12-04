@@ -44,6 +44,14 @@ final class CharactersCollectionViewController: UICollectionViewController {
                                                      status: character.status))
         return cell
     }
+    
+    // MARK: UICollectionViewDelegate
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == characters.count - 1 {
+            activityIndicatorView.startAnimating()
+            viewModel.getMoreCharacters()
+        }
+    }
 }
 
 // MARK: Private methods
@@ -52,10 +60,10 @@ private extension CharactersCollectionViewController {
         viewModel.charactersLoadedPublisher
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] characters in
-            activityIndicatorView.stopAnimating()
-            self.characters += characters
-            collectionView.reloadData()
-        }.store(in: &subscriptions)
+                activityIndicatorView.stopAnimating()
+                self.characters = characters
+                collectionView.reloadData()
+            }.store(in: &subscriptions)
         
         viewModel.charactersFailurePublisher.sink { _ in
             // TODO: Show error

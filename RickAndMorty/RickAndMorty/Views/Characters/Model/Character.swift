@@ -14,7 +14,7 @@ struct Character {
         self.representable = representable
     }
     
-    var imageUrl: String { representable.image }
+    var imageUrl: URL? { URL(string: representable.image) }
     var name: String { representable.name }
     var planet: String { representable.species }
     var status: String { representable.status.rawValue.capitalized }

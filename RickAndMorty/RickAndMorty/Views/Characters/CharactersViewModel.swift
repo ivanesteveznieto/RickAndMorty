@@ -15,6 +15,7 @@ final class CharactersViewModel {
     private let charactersLoadedSubject = PassthroughSubject<[Character], Never>()
     private let charactersFailureSubject = PassthroughSubject<String?, Never>()
     private let noMoreCharactersSubject = PassthroughSubject<Void, Never>()
+    private var characters = [CharacterRepresentable]()
     var charactersLoadedPublisher: AnyPublisher<[Character], Never> {
         charactersLoadedSubject.eraseToAnyPublisher()
     }
@@ -56,8 +57,9 @@ private extension CharactersViewModel {
         switch result {
         case .success(let result):
             nextUrl = result.nextCharactersUrl
-            let characters = result.characters.map({ Character($0) })
-            charactersLoadedSubject.send(characters)
+            characters += result.characters
+            let characterModels = characters.sorted(by: { $0.id < $1.id }).map({ Character($0) })
+            charactersLoadedSubject.send(characterModels)
         case .failure(let error):
             guard !paging else { return }
             
