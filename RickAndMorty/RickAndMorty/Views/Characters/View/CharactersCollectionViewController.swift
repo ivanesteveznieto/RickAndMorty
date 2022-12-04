@@ -14,6 +14,25 @@ final class CharactersCollectionViewController: UICollectionViewController {
     private let viewModel: CharactersViewModel
     private var subscriptions = Set<AnyCancellable>()
     private var characters = [Character]()
+    private lazy var filterMenuItems: [UIAction] = {
+        return [
+            UIAction(title: "Alive", handler: { [unowned viewModel] _ in
+                viewModel.getCharacters(status: .alive)
+            }),
+            UIAction(title: "Dead", handler: { [unowned viewModel] _ in
+                viewModel.getCharacters(status: .dead)
+            }),
+            UIAction(title: "Unknown", handler: { [unowned viewModel] _ in
+                viewModel.getCharacters(status: .unknown)
+            }),
+            UIAction(title: "Any", handler: { [unowned viewModel] _ in
+                viewModel.getCharacters()
+            })
+        ]
+    }()
+    private lazy var filterMenu: UIMenu = {
+        return UIMenu(title: "Filter by status", children: filterMenuItems)
+    }()
     
     init(viewModel: CharactersViewModel) {
         self.viewModel = viewModel
@@ -28,7 +47,6 @@ final class CharactersCollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        showLoading()
         viewModel.getCharacters()
     }
 
@@ -48,7 +66,6 @@ final class CharactersCollectionViewController: UICollectionViewController {
     // MARK: UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row == characters.count - 1 {
-            activityIndicatorView.startAnimating()
             viewModel.getMoreCharacters()
         }
     }
@@ -57,6 +74,10 @@ final class CharactersCollectionViewController: UICollectionViewController {
 // MARK: Private methods
 private extension CharactersCollectionViewController {
     func bind() {
+        viewModel.loadingPublisher.sink { [unowned self] _ in
+            showLoading()
+        }.store(in: &subscriptions)
+        
         viewModel.charactersLoadedPublisher
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] characters in
@@ -77,7 +98,9 @@ private extension CharactersCollectionViewController {
     func setupView() {
         title = "Characters"
         activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.color = .systemBlue
         collectionView.register(UINib(nibName: "\(CharacterCollectionViewCell.self)", bundle: nil), forCellWithReuseIdentifier: "\(CharacterCollectionViewCell.self)")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Filter", menu: filterMenu)
     }
     
     func showLoading() {

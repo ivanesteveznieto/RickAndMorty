@@ -12,10 +12,14 @@ final class CharactersViewModel {
     private let useCase: CharactersUseCaseProtocol
     private let coordinator: CharactersCoordinatorProtocol
     private var nextUrl: String?
+    private let loadingSubject = PassthroughSubject<Void, Never>()
     private let charactersLoadedSubject = PassthroughSubject<[Character], Never>()
     private let charactersFailureSubject = PassthroughSubject<String?, Never>()
     private let noMoreCharactersSubject = PassthroughSubject<Void, Never>()
     private var characters = [CharacterRepresentable]()
+    var loadingPublisher: AnyPublisher<Void, Never> {
+        loadingSubject.eraseToAnyPublisher()
+    }
     var charactersLoadedPublisher: AnyPublisher<[Character], Never> {
         charactersLoadedSubject.eraseToAnyPublisher()
     }
@@ -32,6 +36,9 @@ final class CharactersViewModel {
     }
     
     func getCharacters(status: CharacterStatus? = nil) {
+        loadingSubject.send()
+        characters.removeAll()
+        
         Task {
             let result = await useCase.getCharacters(status: status)
             handleCharactersResponse(result)
@@ -39,6 +46,7 @@ final class CharactersViewModel {
     }
     
     func getMoreCharacters() {
+        loadingSubject.send()
         guard let nextUrl else {
             noMoreCharactersSubject.send()
             return
