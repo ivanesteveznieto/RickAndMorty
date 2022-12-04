@@ -30,6 +30,13 @@
 		2CEA009D29394D6400DED3E8 /* CharacterRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEA009C29394D6400DED3E8 /* CharacterRepresentable.swift */; };
 		2CEA009F29394DFC00DED3E8 /* CharacterResultDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEA009E29394DFC00DED3E8 /* CharacterResultDTO.swift */; };
 		2CEA00A229394FAD00DED3E8 /* CharactersResultRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEA00A129394FAD00DED3E8 /* CharactersResultRepresentable.swift */; };
+		2CF973F0293CE03900D53595 /* EpisodesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF973EE293CE03900D53595 /* EpisodesTableViewController.swift */; };
+		2CF973F1293CE03900D53595 /* EpisodesTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CF973EF293CE03900D53595 /* EpisodesTableViewController.xib */; };
+		2CF973F3293CE04700D53595 /* EpisodesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF973F2293CE04700D53595 /* EpisodesViewModel.swift */; };
+		2CF973F6293CE05F00D53595 /* EpisodesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF973F5293CE05F00D53595 /* EpisodesUseCase.swift */; };
+		2CF973F8293CE06C00D53595 /* EpisodesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF973F7293CE06C00D53595 /* EpisodesRepository.swift */; };
+		2CF973FA293CE07800D53595 /* EpisodesCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF973F9293CE07800D53595 /* EpisodesCoordinator.swift */; };
+		2CF973FC293CE08800D53595 /* EpisodesDependenciesResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF973FB293CE08800D53595 /* EpisodesDependenciesResolver.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +64,13 @@
 		2CEA009C29394D6400DED3E8 /* CharacterRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterRepresentable.swift; sourceTree = "<group>"; };
 		2CEA009E29394DFC00DED3E8 /* CharacterResultDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterResultDTO.swift; sourceTree = "<group>"; };
 		2CEA00A129394FAD00DED3E8 /* CharactersResultRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersResultRepresentable.swift; sourceTree = "<group>"; };
+		2CF973EE293CE03900D53595 /* EpisodesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesTableViewController.swift; sourceTree = "<group>"; };
+		2CF973EF293CE03900D53595 /* EpisodesTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EpisodesTableViewController.xib; sourceTree = "<group>"; };
+		2CF973F2293CE04700D53595 /* EpisodesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesViewModel.swift; sourceTree = "<group>"; };
+		2CF973F5293CE05F00D53595 /* EpisodesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesUseCase.swift; sourceTree = "<group>"; };
+		2CF973F7293CE06C00D53595 /* EpisodesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesRepository.swift; sourceTree = "<group>"; };
+		2CF973F9293CE07800D53595 /* EpisodesCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesCoordinator.swift; sourceTree = "<group>"; };
+		2CF973FB293CE08800D53595 /* EpisodesDependenciesResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesDependenciesResolver.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				2C412316293A41380099E23F /* Characters */,
+				2CF973ED293CE00500D53595 /* Episodes */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -205,6 +220,28 @@
 			path = Representables;
 			sourceTree = "<group>";
 		};
+		2CF973ED293CE00500D53595 /* Episodes */ = {
+			isa = PBXGroup;
+			children = (
+				2CF973FB293CE08800D53595 /* EpisodesDependenciesResolver.swift */,
+				2CF973F9293CE07800D53595 /* EpisodesCoordinator.swift */,
+				2CF973F7293CE06C00D53595 /* EpisodesRepository.swift */,
+				2CF973F5293CE05F00D53595 /* EpisodesUseCase.swift */,
+				2CF973F2293CE04700D53595 /* EpisodesViewModel.swift */,
+				2CF973F4293CE04D00D53595 /* View */,
+			);
+			path = Episodes;
+			sourceTree = "<group>";
+		};
+		2CF973F4293CE04D00D53595 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2CF973EE293CE03900D53595 /* EpisodesTableViewController.swift */,
+				2CF973EF293CE03900D53595 /* EpisodesTableViewController.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -270,6 +307,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C412333293A57E20099E23F /* CharactersCollectionViewController.xib in Resources */,
+				2CF973F1293CE03900D53595 /* EpisodesTableViewController.xib in Resources */,
 				2C412324293A42FD0099E23F /* CharacterCollectionViewCell.xib in Resources */,
 				2C5F6B462939297E007DE0C2 /* LaunchScreen.storyboard in Resources */,
 				2C5F6B432939297E007DE0C2 /* Assets.xcassets in Resources */,
@@ -284,19 +322,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C412332293A57E20099E23F /* CharactersCollectionViewController.swift in Sources */,
+				2CF973F8293CE06C00D53595 /* EpisodesRepository.swift in Sources */,
+				2CF973FC293CE08800D53595 /* EpisodesDependenciesResolver.swift in Sources */,
 				2C41230F293A3DB00099E23F /* EpisodeDTO.swift in Sources */,
 				2C41231D293A419D0099E23F /* CharactersRepository.swift in Sources */,
 				2CEA009D29394D6400DED3E8 /* CharacterRepresentable.swift in Sources */,
 				2C412312293A3E480099E23F /* EpisodeRepresentable.swift in Sources */,
 				2C5F6B4F29392A76007DE0C2 /* NetworkManager.swift in Sources */,
+				2CF973F3293CE04700D53595 /* EpisodesViewModel.swift in Sources */,
+				2CF973F6293CE05F00D53595 /* EpisodesUseCase.swift in Sources */,
 				2C412323293A42FD0099E23F /* CharacterCollectionViewCell.swift in Sources */,
 				2C41231B293A41730099E23F /* CharactersUseCase.swift in Sources */,
 				2C41232B293A47C30099E23F /* CharactersDependenciesResolver.swift in Sources */,
 				2C412319293A41650099E23F /* CharactersViewModel.swift in Sources */,
 				2C5F6B3A2939297C007DE0C2 /* AppDelegate.swift in Sources */,
 				2C41231F293A42120099E23F /* CharactersCoordinator.swift in Sources */,
+				2CF973F0293CE03900D53595 /* EpisodesTableViewController.swift in Sources */,
 				2CEA009F29394DFC00DED3E8 /* CharacterResultDTO.swift in Sources */,
 				2CEA00A229394FAD00DED3E8 /* CharactersResultRepresentable.swift in Sources */,
+				2CF973FA293CE07800D53595 /* EpisodesCoordinator.swift in Sources */,
 				2C5F6B5529392F9A007DE0C2 /* CharacterDTO.swift in Sources */,
 				2C5F6B3C2939297C007DE0C2 /* SceneDelegate.swift in Sources */,
 				2C5F6B5229392AC3007DE0C2 /* NetworkError.swift in Sources */,
