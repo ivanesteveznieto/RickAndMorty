@@ -17,6 +17,7 @@ final class CharactersViewModel {
     private let charactersFailureSubject = PassthroughSubject<String, Never>()
     private let noMoreCharactersSubject = PassthroughSubject<Void, Never>()
     private var characters = [CharacterRepresentable]()
+    private var currentStatusFilter: CharacterStatus?
     var loadingPublisher: AnyPublisher<Void, Never> {
         loadingSubject.eraseToAnyPublisher()
     }
@@ -36,8 +37,10 @@ final class CharactersViewModel {
     }
     
     func getCharacters(status: CharacterStatus? = nil) {
+        currentStatusFilter = status
         loadingSubject.send()
         characters.removeAll()
+        nextUrl = nil
         
         Task {
             let result = await useCase.getCharacters(status: status)
@@ -58,6 +61,14 @@ final class CharactersViewModel {
         }
     }
     
+    func retryGetCharacters() {
+        if nextUrl != nil {
+            getMoreCharacters()
+        } else {
+            getCharacters(status: currentStatusFilter)
+        }
+    }
+    
     func characterSelected(_ index: Int) {
         coordinator.goToEpisodesScreen(character: characters[index])
     }
@@ -72,9 +83,7 @@ private extension CharactersViewModel {
             characters += result.characters
             let characterModels = characters.sorted(by: { $0.id < $1.id }).map({ Character($0) })
             charactersLoadedSubject.send(characterModels)
-        case .failure(let error):
-            guard !paging else { return }
-            
+        case .failure(let error):            
             switch error {
             case .error(let error):
                 charactersFailureSubject.send(error.localizedDescription)

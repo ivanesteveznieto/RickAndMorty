@@ -95,9 +95,12 @@ private extension CharactersCollectionViewController {
                 hideLoading()
             }.store(in: &subscriptions)
         
-        viewModel.charactersFailurePublisher.sink { [unowned self] errorDescription in
-            showErrorAlert(errorDescription)
-        }.store(in: &subscriptions)
+        viewModel.charactersFailurePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] errorDescription in
+                hideLoading()
+                showErrorAlert(errorDescription)
+            }.store(in: &subscriptions)
         
         viewModel.noMoreCharactersPublisher.sink { [unowned self] _ in
             hideLoading()
@@ -130,7 +133,7 @@ private extension CharactersCollectionViewController {
                                                 message: errorDescription,
                                                 preferredStyle: .alert)
         let retryAction = UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
-            self?.viewModel.getCharacters()
+            self?.viewModel.retryGetCharacters()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         alertController.addAction(cancelAction)

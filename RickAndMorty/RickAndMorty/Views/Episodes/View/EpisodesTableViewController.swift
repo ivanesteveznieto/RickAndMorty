@@ -61,10 +61,10 @@ private extension EpisodesTableViewController {
         
         viewModel.episodesLoadedPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] seasons in
-                self?.seasons = seasons
-                self?.tableView.reloadData()
-                self?.hideLoading()
+            .sink { [unowned self] seasons in
+                self.seasons = seasons
+                tableView.reloadData()
+                hideLoading()
             }.store(in: &subscriptions)
     }
     
