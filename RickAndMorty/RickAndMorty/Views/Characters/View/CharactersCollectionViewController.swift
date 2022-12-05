@@ -92,15 +92,15 @@ private extension CharactersCollectionViewController {
             .sink { [unowned self] characters in
                 self.characters = characters
                 collectionView.reloadData()
-                activityIndicatorView.stopAnimating()
+                hideLoading()
             }.store(in: &subscriptions)
         
         viewModel.charactersFailurePublisher.sink { [unowned self] errorDescription in
             showErrorAlert(errorDescription)
         }.store(in: &subscriptions)
         
-        viewModel.noMoreCharactersPublisher.sink { [unowned activityIndicatorView] _ in
-            activityIndicatorView.stopAnimating()
+        viewModel.noMoreCharactersPublisher.sink { [unowned self] _ in
+            hideLoading()
         }.store(in: &subscriptions)
     }
     
@@ -110,6 +110,7 @@ private extension CharactersCollectionViewController {
         view.addSubview(activityIndicatorView)
         activityIndicatorView.hidesWhenStopped = true
         activityIndicatorView.color = .systemBlue
+        activityIndicatorView.center = view.center
         
         collectionView.register(UINib(nibName: "\(CharacterCollectionViewCell.self)", bundle: nil), forCellWithReuseIdentifier: "\(CharacterCollectionViewCell.self)")
         
@@ -118,7 +119,10 @@ private extension CharactersCollectionViewController {
     
     func showLoading() {
         activityIndicatorView.startAnimating()
-        activityIndicatorView.center = view.center
+    }
+    
+    func hideLoading() {
+        activityIndicatorView.stopAnimating()
     }
     
     func showErrorAlert(_ errorDescription: String) {

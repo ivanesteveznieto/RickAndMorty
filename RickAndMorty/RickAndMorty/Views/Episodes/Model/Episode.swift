@@ -15,6 +15,7 @@ struct Episode {
     init(_ representable: EpisodeRepresentable) {
         self.representable = representable
         serverFormatter.dateFormat = "MMMM d, yyyy"
+        serverFormatter.locale = Locale(identifier: "en_US")
         dateFormatter.dateStyle = .long
         dateFormatter.locale = Locale(identifier: "ES")
     }

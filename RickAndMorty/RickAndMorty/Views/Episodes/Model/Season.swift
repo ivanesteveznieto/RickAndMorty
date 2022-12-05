@@ -8,13 +8,7 @@
 import Foundation
 
 struct Season {
-    private let number: Int
-    private let episodes: [Episode]
-    
-    init(number: Int, episodes: [Episode]) {
-        self.number = number
-        self.episodes = episodes
-    }
-    
+    let number: Int
+    let episodes: [Episode]
     var seasonName: String { "Season " + "\(number)" }
 }

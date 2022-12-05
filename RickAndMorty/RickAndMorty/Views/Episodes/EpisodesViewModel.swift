@@ -13,10 +13,13 @@ final class EpisodesViewModel {
     private let coordinator: EpisodesCoordinatorProtocol
     private let character: CharacterRepresentable
     private let titleSubject = PassthroughSubject<String, Never>()
+    private let loadingSubject = PassthroughSubject<Void, Never>()
     private let episodesLoadedSubject = PassthroughSubject<[Season], Never>()
-    private var episodesRepresentable = [EpisodeRepresentable]()
     var titlePublisher: AnyPublisher<String, Never> {
         titleSubject.eraseToAnyPublisher()
+    }
+    var loadingPublisher: AnyPublisher<Void, Never> {
+        loadingSubject.eraseToAnyPublisher()
     }
     var episodesLoadedPublisher: AnyPublisher<[Season], Never> {
         episodesLoadedSubject.eraseToAnyPublisher()
@@ -30,6 +33,7 @@ final class EpisodesViewModel {
     
     func viewDidLoad() {
         titleSubject.send(character.name)
+        loadingSubject.send()
         getAllEpisodes()
     }
 }
@@ -37,15 +41,18 @@ final class EpisodesViewModel {
 private extension EpisodesViewModel {
     func getAllEpisodes() {
         Task {
-            let results = await performEpisodes()
-            results.forEach({ handleEpisodeResponse($0) })
+            let episodesResult = await performEpisodes()
+            let episodesRepresentable = handleEpisodeResponse(episodesResult)
+
             let episodes = episodesRepresentable.map({ Episode($0) }).filter({ $0.season != nil })
-            let dictionary = Dictionary(grouping: episodes, by: { $0.season })
+            let episodesDictionary = Dictionary(grouping: episodes, by: { $0.season })
+            
             var seasons = [Season]()
-            for key in dictionary.keys {
-                let season = Season(number: key ?? 0, episodes: dictionary[key] ?? [])
+            episodesDictionary.keys.forEach({ key in
+                let season = Season(number: key ?? 0, episodes: episodesDictionary[key] ?? [])
                 seasons.append(season)
-            }
+            })
+            seasons = seasons.sorted(by: { $0.number < $1.number })
             episodesLoadedSubject.send(seasons)
         }
     }
@@ -59,11 +66,16 @@ private extension EpisodesViewModel {
         return results
     }
     
-    func handleEpisodeResponse(_ result: Result<EpisodeRepresentable, NetworkError>) {
-        switch result {
-        case .success(let episode):
-            episodesRepresentable.append(episode)
-        case .failure: break
+    func handleEpisodeResponse(_ episodesResult: [Result<EpisodeRepresentable, NetworkError>]) -> [EpisodeRepresentable] {
+        var episodesRepresentable = [EpisodeRepresentable]()
+        
+        episodesResult.forEach { result in
+            switch result {
+            case .success(let episode):
+                episodesRepresentable.append(episode)
+            case .failure: break
+            }
         }
+        return episodesRepresentable
     }
 }
