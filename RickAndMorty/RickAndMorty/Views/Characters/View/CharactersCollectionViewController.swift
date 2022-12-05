@@ -105,6 +105,11 @@ private extension CharactersCollectionViewController {
         viewModel.noMoreCharactersPublisher.sink { [unowned self] _ in
             hideLoading()
         }.store(in: &subscriptions)
+        
+        viewModel.resetViewPublisher.sink { [unowned self] in
+            characters.removeAll()
+            collectionView.reloadData()
+        }.store(in: &subscriptions)
     }
     
     func setupView() {

@@ -16,6 +16,7 @@ final class CharactersViewModel {
     private let charactersLoadedSubject = PassthroughSubject<[Character], Never>()
     private let charactersFailureSubject = PassthroughSubject<String, Never>()
     private let noMoreCharactersSubject = PassthroughSubject<Void, Never>()
+    private let resetViewSubject = PassthroughSubject<Void, Never>()
     private var characters = [CharacterRepresentable]()
     private var currentStatusFilter: CharacterStatus?
     var loadingPublisher: AnyPublisher<Void, Never> {
@@ -30,6 +31,9 @@ final class CharactersViewModel {
     var noMoreCharactersPublisher: AnyPublisher<Void, Never> {
         noMoreCharactersSubject.eraseToAnyPublisher()
     }
+    var resetViewPublisher: AnyPublisher<Void, Never> {
+        resetViewSubject.eraseToAnyPublisher()
+    }
     
     init(dependencies: CharactersDependenciesResolver) {
         useCase = dependencies.resolve()
@@ -39,8 +43,7 @@ final class CharactersViewModel {
     func getCharacters(status: CharacterStatus? = nil) {
         currentStatusFilter = status
         loadingSubject.send()
-        characters.removeAll()
-        nextUrl = nil
+        resetView()
         
         Task {
             let result = await useCase.getCharacters(status: status)
@@ -93,5 +96,11 @@ private extension CharactersViewModel {
                 charactersFailureSubject.send("Error en formato url")
             }
         }
+    }
+    
+    func resetView() {
+        characters.removeAll()
+        nextUrl = nil
+        resetViewSubject.send()
     }
 }
