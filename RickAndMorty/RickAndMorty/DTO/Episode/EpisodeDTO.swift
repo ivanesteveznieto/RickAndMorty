@@ -9,7 +9,7 @@ import Foundation
 
 struct EpisodeDTO: Decodable {
     let name: String
-    let airDate: Date
+    let airDate: String
     let episode: String
     
     private enum CodingKeys: String, CodingKey {

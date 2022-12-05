@@ -11,6 +11,7 @@ import Combine
 final class EpisodesTableViewController: UITableViewController {
     private let viewModel: EpisodesViewModel
     private var subscriptions = Set<AnyCancellable>()
+    private var seasons = [Season]()
     
     init(viewModel: EpisodesViewModel) {
         self.viewModel = viewModel
@@ -55,5 +56,11 @@ private extension EpisodesTableViewController {
         viewModel.titlePublisher.sink { [unowned self] screenTitle in
             title = screenTitle
         }.store(in: &subscriptions)
+        
+        viewModel.episodesLoadedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { seasons in
+                // TODO
+            }.store(in: &subscriptions)
     }
 }

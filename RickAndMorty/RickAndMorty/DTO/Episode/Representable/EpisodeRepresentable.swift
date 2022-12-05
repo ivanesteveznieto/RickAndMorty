@@ -10,5 +10,5 @@ import Foundation
 protocol EpisodeRepresentable {
     var title: String { get }
     var season: String { get }
-    var airDate: Date { get }
+    var airDate: String { get }
 }

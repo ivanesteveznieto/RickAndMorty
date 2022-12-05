@@ -8,7 +8,7 @@
 import Foundation
 
 protocol EpisodesUseCaseProtocol {
-    
+    func getEpisodeFromUrl(_ url: String) async -> Result<EpisodeRepresentable, NetworkError>
 }
 
 struct EpisodesUseCase: EpisodesUseCaseProtocol {
@@ -16,5 +16,9 @@ struct EpisodesUseCase: EpisodesUseCaseProtocol {
     
     init(repository: EpisodesRepositoryProtocol) {
         self.repository = repository
+    }
+    
+    func getEpisodeFromUrl(_ url: String) async -> Result<EpisodeRepresentable, NetworkError> {
+        await repository.getEpisodeFromUrl(url)
     }
 }

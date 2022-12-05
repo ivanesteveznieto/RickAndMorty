@@ -20,6 +20,8 @@
 		2C41232B293A47C30099E23F /* CharactersDependenciesResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C41232A293A47C30099E23F /* CharactersDependenciesResolver.swift */; };
 		2C412332293A57E20099E23F /* CharactersCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C412330293A57E20099E23F /* CharactersCollectionViewController.swift */; };
 		2C412333293A57E20099E23F /* CharactersCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C412331293A57E20099E23F /* CharactersCollectionViewController.xib */; };
+		2C56F9B9293D63F0002F77C9 /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C56F9B8293D63F0002F77C9 /* Episode.swift */; };
+		2C56F9BB293D693F002F77C9 /* Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C56F9BA293D693F002F77C9 /* Season.swift */; };
 		2C5F6B3A2939297C007DE0C2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5F6B392939297C007DE0C2 /* AppDelegate.swift */; };
 		2C5F6B3C2939297C007DE0C2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5F6B3B2939297C007DE0C2 /* SceneDelegate.swift */; };
 		2C5F6B432939297E007DE0C2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C5F6B422939297E007DE0C2 /* Assets.xcassets */; };
@@ -52,6 +54,8 @@
 		2C41232A293A47C30099E23F /* CharactersDependenciesResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersDependenciesResolver.swift; sourceTree = "<group>"; };
 		2C412330293A57E20099E23F /* CharactersCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersCollectionViewController.swift; sourceTree = "<group>"; };
 		2C412331293A57E20099E23F /* CharactersCollectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CharactersCollectionViewController.xib; sourceTree = "<group>"; };
+		2C56F9B8293D63F0002F77C9 /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
+		2C56F9BA293D693F002F77C9 /* Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Season.swift; sourceTree = "<group>"; };
 		2C5F6B362939297C007DE0C2 /* RickAndMorty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RickAndMorty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C5F6B392939297C007DE0C2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2C5F6B3B2939297C007DE0C2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -152,6 +156,15 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		2C56F9B7293D63E7002F77C9 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2C56F9BA293D693F002F77C9 /* Season.swift */,
+				2C56F9B8293D63F0002F77C9 /* Episode.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		2C5F6B2D2939297C007DE0C2 = {
 			isa = PBXGroup;
 			children = (
@@ -223,6 +236,7 @@
 		2CF973ED293CE00500D53595 /* Episodes */ = {
 			isa = PBXGroup;
 			children = (
+				2C56F9B7293D63E7002F77C9 /* Model */,
 				2CF973FB293CE08800D53595 /* EpisodesDependenciesResolver.swift */,
 				2CF973F9293CE07800D53595 /* EpisodesCoordinator.swift */,
 				2CF973F7293CE06C00D53595 /* EpisodesRepository.swift */,
@@ -329,6 +343,7 @@
 				2CEA009D29394D6400DED3E8 /* CharacterRepresentable.swift in Sources */,
 				2C412312293A3E480099E23F /* EpisodeRepresentable.swift in Sources */,
 				2C5F6B4F29392A76007DE0C2 /* NetworkManager.swift in Sources */,
+				2C56F9BB293D693F002F77C9 /* Season.swift in Sources */,
 				2CF973F3293CE04700D53595 /* EpisodesViewModel.swift in Sources */,
 				2CF973F6293CE05F00D53595 /* EpisodesUseCase.swift in Sources */,
 				2C412323293A42FD0099E23F /* CharacterCollectionViewCell.swift in Sources */,
@@ -344,6 +359,7 @@
 				2C5F6B5529392F9A007DE0C2 /* CharacterDTO.swift in Sources */,
 				2C5F6B3C2939297C007DE0C2 /* SceneDelegate.swift in Sources */,
 				2C5F6B5229392AC3007DE0C2 /* NetworkError.swift in Sources */,
+				2C56F9B9293D63F0002F77C9 /* Episode.swift in Sources */,
 				2C3EB4B3293BA8A9009F6E72 /* Character.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
