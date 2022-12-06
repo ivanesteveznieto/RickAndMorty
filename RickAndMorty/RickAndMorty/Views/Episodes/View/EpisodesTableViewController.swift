@@ -30,8 +30,7 @@ final class EpisodesTableViewController: UITableViewController {
         viewModel.viewDidLoad()
     }
 
-    // MARK: - Table view data source
-
+    // MARK: UITableViewDataSource
     override func numberOfSections(in tableView: UITableView) -> Int { seasons.count }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { seasons[section].episodes.count }
@@ -43,8 +42,7 @@ final class EpisodesTableViewController: UITableViewController {
         return cell
     }
     
-    // MARK: - Table view delegate
-    
+    // MARK: UITableViewDelegate
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { seasons[section].seasonName }
 }
 
@@ -69,11 +67,18 @@ private extension EpisodesTableViewController {
     }
     
     func setupView() {
+        setupActivityIndicatorView()
+        setupTableView()
+    }
+    
+    func setupActivityIndicatorView() {
         tableView.addSubview(activityIndicatorView)
         activityIndicatorView.hidesWhenStopped = true
         activityIndicatorView.color = .systemBlue
         activityIndicatorView.center = tableView.center
-        
+    }
+    
+    func setupTableView() {
         tableView.register(UINib(nibName: "\(EpisodeTableViewCell.self)", bundle: nil), forCellReuseIdentifier: "\(EpisodeTableViewCell.self)")
         tableView.estimatedRowHeight = 44
         tableView.rowHeight = UITableView.automaticDimension

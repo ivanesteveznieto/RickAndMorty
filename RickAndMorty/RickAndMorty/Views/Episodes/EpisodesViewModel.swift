@@ -14,7 +14,7 @@ final class EpisodesViewModel {
     private let character: CharacterRepresentable
     private let titleSubject = PassthroughSubject<String, Never>()
     private let loadingSubject = PassthroughSubject<Void, Never>()
-    private let episodesLoadedSubject = PassthroughSubject<[Season], Never>()
+    private let seasonsLoadedSubject = PassthroughSubject<[Season], Never>()
     var titlePublisher: AnyPublisher<String, Never> {
         titleSubject.eraseToAnyPublisher()
     }
@@ -22,7 +22,7 @@ final class EpisodesViewModel {
         loadingSubject.eraseToAnyPublisher()
     }
     var episodesLoadedPublisher: AnyPublisher<[Season], Never> {
-        episodesLoadedSubject.eraseToAnyPublisher()
+        seasonsLoadedSubject.eraseToAnyPublisher()
     }
     
     init(dependencies: EpisodesDependenciesResolver, character: CharacterRepresentable) {
@@ -38,6 +38,7 @@ final class EpisodesViewModel {
     }
 }
 
+// MARK: Private methods
 private extension EpisodesViewModel {
     func getAllEpisodes() {
         Task {
@@ -45,15 +46,9 @@ private extension EpisodesViewModel {
             let episodesRepresentable = handleEpisodeResponse(episodesResult)
 
             let episodes = episodesRepresentable.map({ Episode($0) }).filter({ $0.season != nil })
-            let episodesDictionary = Dictionary(grouping: episodes, by: { $0.season })
             
-            var seasons = [Season]()
-            episodesDictionary.keys.forEach({ key in
-                let season = Season(number: key ?? 0, episodes: episodesDictionary[key] ?? [])
-                seasons.append(season)
-            })
-            seasons = seasons.sorted(by: { $0.number < $1.number })
-            episodesLoadedSubject.send(seasons)
+            let seasons = clasifyEpisodesInSeasons(episodes).sorted(by: { $0.number < $1.number })
+            seasonsLoadedSubject.send(seasons)
         }
     }
     
@@ -77,5 +72,17 @@ private extension EpisodesViewModel {
             }
         }
         return episodesRepresentable
+    }
+    
+    func clasifyEpisodesInSeasons(_ episodes: [Episode]) -> [Season] {
+        let episodesDictionary = Dictionary(grouping: episodes, by: { $0.season })
+        
+        var seasons = [Season]()
+        episodesDictionary.keys.forEach({ key in
+            let season = Season(number: key ?? 0, episodes: episodesDictionary[key] ?? [])
+            seasons.append(season)
+        })
+        
+        return seasons
     }
 }

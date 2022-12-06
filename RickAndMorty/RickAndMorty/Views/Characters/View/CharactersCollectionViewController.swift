@@ -114,15 +114,21 @@ private extension CharactersCollectionViewController {
     
     func setupView() {
         title = "Characters"
-        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Filter", menu: filterMenu)
+
+        setupActivityIndicatorView()
+        setupCollectionView()
+    }
+    
+    func setupActivityIndicatorView() {
         view.addSubview(activityIndicatorView)
         activityIndicatorView.hidesWhenStopped = true
         activityIndicatorView.color = .systemBlue
         activityIndicatorView.center = view.center
-        
+    }
+    
+    func setupCollectionView() {
         collectionView.register(UINib(nibName: "\(CharacterCollectionViewCell.self)", bundle: nil), forCellWithReuseIdentifier: "\(CharacterCollectionViewCell.self)")
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Filter", menu: filterMenu)
     }
     
     func showLoading() {
@@ -147,6 +153,7 @@ private extension CharactersCollectionViewController {
     }
 }
 
+// MARK: UICollectionViewDelegateFlowLayout
 extension CharactersCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let size = Int(collectionView.bounds.width / CGFloat(numberOfItemsPerRow))
