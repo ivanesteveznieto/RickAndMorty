@@ -12,7 +12,7 @@ protocol EpisodesCoordinatorProtocol: AnyObject {
     var character: CharacterRepresentable? { get }
 }
 
-final class EpisodesCoordinator: EpisodesCoordinatorProtocol {
+final class EpisodesCoordinator: Coordinator, EpisodesCoordinatorProtocol {
     private weak var navigationController: UINavigationController?
     private lazy var dependency: EpisodesDependenciesResolver = {
         Dependencies(coordinator: self)

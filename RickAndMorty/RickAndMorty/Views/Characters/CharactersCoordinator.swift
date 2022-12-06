@@ -8,11 +8,15 @@
 import Foundation
 import UIKit
 
+protocol Coordinator {
+    func start()
+}
+
 protocol CharactersCoordinatorProtocol: AnyObject {
     func goToEpisodesScreen(character: CharacterRepresentable)
 }
 
-final class CharactersCoordinator {
+final class CharactersCoordinator: Coordinator {
     private weak var navigationController: UINavigationController?
     private lazy var dependency: CharactersDependenciesResolver = {
         Dependencies(coordinator: self)
