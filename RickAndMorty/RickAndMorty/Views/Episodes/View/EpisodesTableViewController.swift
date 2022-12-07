@@ -9,6 +9,10 @@ import UIKit
 import Combine
 
 final class EpisodesTableViewController: UITableViewController {
+    enum State {
+        case idle, loading, data([Season])
+    }
+    private var state = State.idle
     private let viewModel: EpisodesViewModel
     private var subscriptions = Set<AnyCancellable>()
     private var seasons = [Season]()
@@ -49,20 +53,23 @@ final class EpisodesTableViewController: UITableViewController {
 // MARK: Private methods
 private extension EpisodesTableViewController {
     func bind() {
-        viewModel.loadingPublisher.sink { [unowned self] _ in
-            showLoading()
-        }.store(in: &subscriptions)
-        
         viewModel.titlePublisher.sink { [unowned self] screenTitle in
             title = screenTitle
         }.store(in: &subscriptions)
         
-        viewModel.episodesLoadedPublisher
+        viewModel.statePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] seasons in
-                self.seasons = seasons
-                tableView.reloadData()
-                hideLoading()
+            .sink { [unowned self] state in
+                self.state = state
+                switch state {
+                case .idle: break
+                case .loading:
+                    showLoading()
+                case .data(let seasons):
+                    self.seasons = seasons
+                    tableView.reloadData()
+                    hideLoading()
+                }
             }.store(in: &subscriptions)
     }
     

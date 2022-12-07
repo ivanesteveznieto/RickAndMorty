@@ -9,6 +9,10 @@ import UIKit
 import Combine
 
 final class CharactersCollectionViewController: UICollectionViewController {
+    enum State {
+        case idle, loading, data([Character]), noMoreCharacters, error(String)
+    }
+    private var state = State.idle
     private let activityIndicatorView = UIActivityIndicatorView(style: .large)
     private let numberOfItemsPerRow = 4
     private let viewModel: CharactersViewModel
@@ -83,33 +87,27 @@ final class CharactersCollectionViewController: UICollectionViewController {
 // MARK: Private methods
 private extension CharactersCollectionViewController {
     func bind() {
-        viewModel.loadingPublisher.sink { [unowned self] _ in
-            showLoading()
-        }.store(in: &subscriptions)
-        
-        viewModel.charactersLoadedPublisher
+        viewModel.statePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] characters in
-                self.characters = characters
-                collectionView.reloadData()
-                hideLoading()
+            .sink { [unowned self] state in
+                self.state = state
+                switch state {
+                case .idle:
+                    characters.removeAll()
+                    collectionView.reloadData()
+                case .loading:
+                    showLoading()
+                case .data(let characters):
+                    self.characters = characters
+                    collectionView.reloadData()
+                    hideLoading()
+                case .noMoreCharacters:
+                    hideLoading()
+                case .error(let errorDescription):
+                    hideLoading()
+                    showErrorAlert(errorDescription)
+                }
             }.store(in: &subscriptions)
-        
-        viewModel.charactersFailurePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] errorDescription in
-                hideLoading()
-                showErrorAlert(errorDescription)
-            }.store(in: &subscriptions)
-        
-        viewModel.noMoreCharactersPublisher.sink { [unowned self] _ in
-            hideLoading()
-        }.store(in: &subscriptions)
-        
-        viewModel.resetViewPublisher.sink { [unowned self] in
-            characters.removeAll()
-            collectionView.reloadData()
-        }.store(in: &subscriptions)
     }
     
     func setupView() {

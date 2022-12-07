@@ -13,16 +13,12 @@ final class EpisodesViewModel {
     private let coordinator: EpisodesCoordinatorProtocol
     private let character: CharacterRepresentable
     private let titleSubject = PassthroughSubject<String, Never>()
-    private let loadingSubject = PassthroughSubject<Void, Never>()
-    private let seasonsLoadedSubject = PassthroughSubject<[Season], Never>()
+    private let stateSubject = PassthroughSubject<EpisodesTableViewController.State, Never>()
     var titlePublisher: AnyPublisher<String, Never> {
         titleSubject.eraseToAnyPublisher()
     }
-    var loadingPublisher: AnyPublisher<Void, Never> {
-        loadingSubject.eraseToAnyPublisher()
-    }
-    var episodesLoadedPublisher: AnyPublisher<[Season], Never> {
-        seasonsLoadedSubject.eraseToAnyPublisher()
+    var statePublisher: AnyPublisher<EpisodesTableViewController.State, Never> {
+        stateSubject.eraseToAnyPublisher()
     }
     
     init(dependencies: EpisodesDependenciesResolver, character: CharacterRepresentable) {
@@ -33,7 +29,7 @@ final class EpisodesViewModel {
     
     func viewDidLoad() {
         titleSubject.send(character.name)
-        loadingSubject.send()
+        stateSubject.send(.loading)
         getAllEpisodes()
     }
 }
@@ -48,7 +44,7 @@ private extension EpisodesViewModel {
             let episodes = episodesRepresentable.map({ Episode($0) }).filter({ $0.season != nil })
             
             let seasons = clasifyEpisodesInSeasons(episodes).sorted(by: { $0.number < $1.number })
-            seasonsLoadedSubject.send(seasons)
+            stateSubject.send(.data(seasons))
         }
     }
     
