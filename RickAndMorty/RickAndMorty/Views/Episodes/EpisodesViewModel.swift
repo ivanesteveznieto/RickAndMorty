@@ -57,6 +57,23 @@ private extension EpisodesViewModel {
         return results
     }
     
+    func performEpisodesAsync() async -> [Result<EpisodeRepresentable, NetworkError>] {
+        await withTaskGroup(of: Result<EpisodeRepresentable, NetworkError>.self) { [weak self] group -> [Result<EpisodeRepresentable, NetworkError>] in
+            guard let self else { return [] }
+            
+            for episode in character.episodes {
+                group.addTask {
+                    await self.useCase.getEpisodeFromUrl(episode)
+                }
+            }
+            var results = [Result<EpisodeRepresentable, NetworkError>]()
+            for await value in group {
+                results.append(value)
+            }
+            return results
+        }
+    }
+    
     func handleEpisodeResponse(_ episodesResult: [Result<EpisodeRepresentable, NetworkError>]) -> [EpisodeRepresentable] {
         var episodesRepresentable = [EpisodeRepresentable]()
         
